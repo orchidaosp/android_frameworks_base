@@ -55,6 +55,7 @@ import com.android.systemui.qs.tiles.ReadingModeTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.qs.tiles.SyncTile;
 import com.android.systemui.qs.tiles.UiModeNightTile;
+import com.android.systemui.qs.tiles.ScreenStabilizationTile;
 import com.android.systemui.qs.tiles.UsbTetherTile;
 import com.android.systemui.qs.tiles.UserTile;
 import com.android.systemui.qs.tiles.VolumeTile;
@@ -117,9 +118,6 @@ public class QSFactoryImpl implements QSFactory {
     private final Provider<GamingModeTile> mGamingModeTileProvider;
     private final Provider<DataSwitchTile> mDataSwitchTileProvider;
     private final Provider<ScreenStabilizationTile> mScreenStabilizationTileProvider;
-    private final Provider<ScreenRecordTile> mScreeenRecordTileProvider;
-    private final Provider<WeatherTile> mWeatherTileProvider;
-    private final Provider<DcDimmingTile> mDcDimmingTileProvider;
 
     private QSTileHost mHost;
 
@@ -169,9 +167,7 @@ public class QSFactoryImpl implements QSFactory {
             Provider<GamingModeTile> gamingModeTileProvider,
             Provider<DataSwitchTile> dataSwitchTileProvider,
             Provider<FPSInfoTile> fpsInfoTileProvider,
-            Provider<ScreenStabilizationTile> screenStabilizationTileProvider,
-            Provider<ScreenRecordTile> screenRecordTileProvider,
-            Provider<WeatherTile> weatherTileProvider) {
+            Provider<ScreenStabilizationTile> screenStabilizationTileProvider) {
         mWifiTileProvider = wifiTileProvider;
         mBluetoothTileProvider = bluetoothTileProvider;
         mCellularTileProvider = cellularTileProvider;
@@ -217,9 +213,6 @@ public class QSFactoryImpl implements QSFactory {
         mDataSwitchTileProvider = dataSwitchTileProvider;
         mFPSInfoTileProvider = fpsInfoTileProvider;
         mScreenStabilizationTileProvider = screenStabilizationTileProvider;
-        mScreeenRecordTileProvider = screenRecordTileProvider;
-        mWeatherTileProvider = weatherTileProvider;
-        mDcDimmingTileProvider = dcDimTileProvider;
     }
 
     public void setHost(QSTileHost host) {
@@ -326,12 +319,6 @@ public class QSFactoryImpl implements QSFactory {
                 return mFPSInfoTileProvider.get();
             case "screenstabilization":
                 return mScreenStabilizationTileProvider.get();
-            case "screenrecord":
-                return mScreeenRecordTileProvider.get();
-            case "weather":
-                return mWeatherTileProvider.get();
-            case "dc_dimming":
-                return mDcDimmingTileProvider.get();
         }
 
         // Intent tiles.

@@ -5075,7 +5075,21 @@ public final class Settings {
          * Three Finger Gesture from Oppo
          * @hide
          */
-        public static final String THREE_FINGER_GESTURE = "three_finger_gesture";
+        public static final String QS_BACKGROUND_BLUR = "qs_background_blur";
+
+        /**
+         * Screen stabilization parameters
+         * @hide
+         */
+        public static final String STABILIZATION_ENABLE = "stabilization_enable";
+
+        public static final String STABILIZATION_VELOCITY_FRICTION = "stabilization_velocity_friction";
+
+        public static final String STABILIZATION_POSITION_FRICTION = "stabilization_position_friction";
+
+        public static final String STABILIZATION_LOWPASS_ALPHA = "stabilization_lowpass_alpha";
+
+        public static final String STABILIZATION_VELOCITY_AMPLITUDE = "stabilization_velocity_amplitude";
 
         /**
          * Which Vibration Pattern to use
