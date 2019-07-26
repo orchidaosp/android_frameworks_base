@@ -285,6 +285,17 @@ public class StatusBar extends SystemUI implements DemoMode,
     private static final String FORCE_SHOW_NAVBAR =
             "lineagesystem:" + LineageSettings.System.FORCE_SHOW_NAVBAR;
 
+    private static final String QS_TILE_TITLE_VISIBILITY =
+            "system:" + Settings.System.QS_TILE_TITLE_VISIBILITY;
+    private static final String SYSUI_ROUNDED_FWVALS =
+            Settings.Secure.SYSUI_ROUNDED_FWVALS;
+    private static final String GAMING_MODE_ACTIVE =
+            "system:" + Settings.System.GAMING_MODE_ACTIVE;
+    private static final String GAMING_MODE_HEADSUP_TOGGLE =
+            "system:" + Settings.System.GAMING_MODE_HEADSUP_TOGGLE;
+    private static final String LESS_BORING_HEADS_UP =
+            "system:" + Settings.System.LESS_BORING_HEADS_UP;
+
     private static final String BANNER_ACTION_CANCEL =
             "com.android.systemui.statusbar.banner_action_cancel";
     private static final String BANNER_ACTION_SETUP =
@@ -469,6 +480,11 @@ public class StatusBar extends SystemUI implements DemoMode,
     private final Rect mLastDockedStackBounds = new Rect();
 
     private final DisplayMetrics mDisplayMetrics = Dependency.get(DisplayMetrics.class);
+
+    private boolean mSysuiRoundedFwvals;
+
+    private boolean mHeadsUpDisabled, mGamingModeActivated;
+    private boolean mlessBoringHeadsUp;
 
     // XXX: gesture research
     private final GestureRecorder mGestureRec = DEBUG_GESTURES
@@ -725,6 +741,11 @@ public class StatusBar extends SystemUI implements DemoMode,
         tunerService.addTunable(this, SCREEN_BRIGHTNESS_MODE);
         tunerService.addTunable(this, STATUS_BAR_BRIGHTNESS_CONTROL);
         tunerService.addTunable(this, FORCE_SHOW_NAVBAR);
+        tunerService.addTunable(this, QS_TILE_TITLE_VISIBILITY);
+        tunerService.addTunable(this, SYSUI_ROUNDED_FWVALS);
+        tunerService.addTunable(this, GAMING_MODE_ACTIVE);
+        tunerService.addTunable(this, GAMING_MODE_HEADSUP_TOGGLE);
+        tunerService.addTunable(this, LESS_BORING_HEADS_UP);
 
         mDisplayManager = mContext.getSystemService(DisplayManager.class);
 
@@ -4908,7 +4929,29 @@ public class StatusBar extends SystemUI implements DemoMode,
                 if (hasNavbar) {
                     mNavigationBarController.onDisplayRemoved(mDisplayId);
                 }
-            }
+                break;
+            case SYSUI_ROUNDED_FWVALS:
+                mSysuiRoundedFwvals =
+                        TunerService.parseIntegerSwitch(newValue, true);
+                updateCorners();
+                break;
+            case GAMING_MODE_ACTIVE:
+                mGamingModeActivated =
+                        TunerService.parseIntegerSwitch(newValue, false);
+                mNotificationInterruptionStateProvider.setGamingPeekMode(mGamingModeActivated && mHeadsUpDisabled);
+                break;
+            case GAMING_MODE_HEADSUP_TOGGLE:
+                mHeadsUpDisabled =
+                        TunerService.parseIntegerSwitch(newValue, true);
+                mNotificationInterruptionStateProvider.setGamingPeekMode(mGamingModeActivated && mHeadsUpDisabled);
+                break;
+            case LESS_BORING_HEADS_UP:
+                mlessBoringHeadsUp =
+                        TunerService.parseIntegerSwitch(newValue, false);
+                mNotificationInterruptionStateProvider.setUseLessBoringHeadsUp(mlessBoringHeadsUp);
+                break;
+            default:
+                break;
         }
     }
     // End Extra BaseStatusBarMethods.
