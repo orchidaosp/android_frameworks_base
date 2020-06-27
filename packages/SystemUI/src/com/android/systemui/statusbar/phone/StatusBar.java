@@ -1106,6 +1106,31 @@ public class StatusBar extends SystemUI implements DemoMode,
         ThreadedRenderer.overrideProperty("ambientRatio", String.valueOf(1.5f));
     }
 
+    public void updateBlurVisibility() {
+        float QSBlurAlpha = mNotificationPanel.getExpandedFraction();
+
+        if (QSBlurAlpha > 0f && !blurperformed && !mIsKeyguard) {
+            drawBlurView();
+            blurperformed = true;
+            mQSBlurView.setVisibility(View.VISIBLE);
+        } else if (QSBlurAlpha == 0f || mState == StatusBarState.KEYGUARD) {
+            blurperformed = false;
+            mQSBlurView.setVisibility(View.GONE);
+        }
+        mQSBlurView.setAlpha(QSBlurAlpha);
+    }
+
+    private void drawBlurView() {
+		Bitmap surfaceBitmap = ImageUtilities.screenshotSurface(mContext);
+		Bitmap bittemp = ImageUtilities.blurImage(mContext, surfaceBitmap);
+		Drawable background = new BitmapDrawable(mContext.getResources(), bittemp);
+        if (surfaceBitmap == null) {
+            mQSBlurView.setImageDrawable(null);
+        } else {
+            mQSBlurView.setImageDrawable(background);
+        }
+    }
+
     protected QS createDefaultQSFragment() {
         return FragmentHostManager.get(mStatusBarWindow).create(QSFragment.class);
     }
