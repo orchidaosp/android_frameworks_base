@@ -14522,6 +14522,12 @@ public final class Settings {
                 new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
 
         /**
+         * Whether to display rotation button on navigation bar
+         * @hide
+         */
+        public static final String SHOW_ROTATION_BUTTON = "show_rotation_button";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
