@@ -45,13 +45,12 @@ import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.statusbar.policy.AccessibilityManagerWrapper;
 import com.android.systemui.statusbar.policy.KeyButtonDrawable;
 import com.android.systemui.statusbar.policy.RotationLockController;
-import com.android.systemui.tuner.TunerService;
 
 import java.util.Optional;
 import java.util.function.Consumer;
 
 /** Contains logic that deals with showing a rotate suggestion button with animation. */
-public class RotationButtonController implements TunerService.Tunable {
+public class RotationButtonController {
 
     private static final int BUTTON_FADE_IN_OUT_DURATION_MS = 100;
     private static final int NAVBAR_HIDDEN_PENDING_ICON_TIMEOUT_MS = 20000;
@@ -71,7 +70,6 @@ public class RotationButtonController implements TunerService.Tunable {
     private Consumer<Integer> mRotWatcherListener;
     private boolean mListenersRegistered = false;
     private boolean mIsNavigationBarShowing;
-    private boolean mShowRotationButton = true;
 
     private final Runnable mRemoveRotationProposal =
             () -> setRotateSuggestionButtonState(false /* visible */);
@@ -82,9 +80,6 @@ public class RotationButtonController implements TunerService.Tunable {
     private final Context mContext;
     private final RotationButton mRotationButton;
     private final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
-
-    private static final String SHOW_ROTATION_BUTTON =
-            "global:" + Settings.Global.SHOW_ROTATION_BUTTON;
 
     private final Stub mRotationWatcher = new Stub() {
         @Override
@@ -131,9 +126,6 @@ public class RotationButtonController implements TunerService.Tunable {
         mTaskStackListener = new TaskStackListenerImpl();
         mRotationButton.setOnClickListener(this::onRotateSuggestionClick);
         mRotationButton.setOnHoverListener(this::onRotateSuggestionHover);
-
-        final TunerService tunerService = Dependency.get(TunerService.class);
-        tunerService.addTunable(this, SHOW_ROTATION_BUTTON);
     }
 
     void registerListeners() {
@@ -287,7 +279,7 @@ public class RotationButtonController implements TunerService.Tunable {
         mStyleRes = style;
         mRotationButton.updateIcon();
 
-        if (mIsNavigationBarShowing && mShowRotationButton) {
+        if (mIsNavigationBarShowing) {
             // The navbar is visible so show the icon right away
             showAndLogRotationSuggestion();
         } else {
@@ -475,17 +467,5 @@ public class RotationButtonController implements TunerService.Tunable {
                 mRoot.setPressed(false /* pressed */);
             }
         };
-    }
-
-    @Override
-    public void onTuningChanged(String key, String newValue) {
-        switch (key) {
-            case SHOW_ROTATION_BUTTON:
-                mShowRotationButton =
-                        TunerService.parseIntegerSwitch(newValue, true);
-                break;
-            default:
-                break;
-        }
     }
 }
