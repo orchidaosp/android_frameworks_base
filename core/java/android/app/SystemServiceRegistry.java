@@ -70,9 +70,7 @@ import android.hardware.biometrics.BiometricManager;
 import android.hardware.biometrics.IBiometricService;
 import android.hardware.camera2.CameraManager;
 import android.hardware.display.ColorDisplayManager;
-import android.hardware.display.DcDimmingManager;
 import android.hardware.display.DisplayManager;
-import android.hardware.display.IDcDimmingManager;
 import android.hardware.face.FaceManager;
 import android.hardware.face.IFaceService;
 import android.hardware.fingerprint.FingerprintManager;
@@ -953,37 +951,6 @@ final class SystemServiceRegistry {
                         return new BiometricManager(ctx.getOuterContext(), service);
                     }
                 });
-
-        registerService(Context.POCKET_SERVICE, PocketManager.class,
-                new CachedServiceFetcher<PocketManager>() {
-                    @Override
-                    public PocketManager createService(ContextImpl ctx) {
-                        IBinder binder = ServiceManager.getService(Context.POCKET_SERVICE);
-                        IPocketService service = IPocketService.Stub.asInterface(binder);
-                        return new PocketManager(ctx.getOuterContext(), service);
-                    }});
-
-        registerService(Context.APPLOCK_SERVICE, AppLockManager.class,
-                new CachedServiceFetcher<AppLockManager>() {
-            @Override
-            public AppLockManager createService(ContextImpl ctx) throws ServiceNotFoundException {
-                IBinder b = ServiceManager.getServiceOrThrow(Context.APPLOCK_SERVICE);
-                IAppLockService service = IAppLockService.Stub.asInterface(b);
-                return new AppLockManager(service);
-            }});
-
-	registerService(Context.DC_DIM_SERVICE, DcDimmingManager.class,
-                new CachedServiceFetcher<DcDimmingManager>() {
-                    @Override
-                    public DcDimmingManager createService(ContextImpl ctx) throws ServiceNotFoundException {
-                        if (Resources.getSystem().getString(
-                                com.android.internal.R.string.config_deviceDcDimmingSysfsNode).isEmpty()) {
-                            return null;
-                        }
-                        IBinder b = ServiceManager.getServiceOrThrow(Context.DC_DIM_SERVICE);
-                        IDcDimmingManager service = IDcDimmingManager.Stub.asInterface(b);
-                        return new DcDimmingManager(service);
-                    }});
 
         registerService(Context.TV_INPUT_SERVICE, TvInputManager.class,
                 new CachedServiceFetcher<TvInputManager>() {
