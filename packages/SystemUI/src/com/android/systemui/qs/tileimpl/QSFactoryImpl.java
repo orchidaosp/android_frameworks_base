@@ -53,7 +53,6 @@ import com.android.systemui.qs.tiles.ReadingModeTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.qs.tiles.SyncTile;
 import com.android.systemui.qs.tiles.UiModeNightTile;
-import com.android.systemui.qs.tiles.ScreenStabilizationTile;
 import com.android.systemui.qs.tiles.UsbTetherTile;
 import com.android.systemui.qs.tiles.UserTile;
 import com.android.systemui.qs.tiles.VolumeTile;
@@ -103,6 +102,22 @@ public class QSFactoryImpl implements QSFactory {
     private final Provider<UsbTetherTile> mUsbTetherTileProvider;
     private final Provider<VolumeTile> mVolumeTileProvider;
     private final Provider<VpnTile> mVpnTileProvider;
+    private final Provider<SmartPixelsTile> mSmartPixelsTileProvider;
+    private final Provider<ScreenshotTile> mScreenshotTileProvider;
+    private final Provider<FPSInfoTile> mFPSInfoTileProvider;
+    private final Provider<CPUInfoTile> mCPUInfoTileProvider;
+    private final Provider<HWKeysTile> mHWKeysTileProvider;
+    private final Provider<CompassTile> mCompassTileProvider;
+    private final Provider<MusicTile> mMusicTileProvider;
+    private final Provider<SoundSearchTile> mSoundSearchTileProvider;
+    private final Provider<SoundTile> mSoundTileProvider;
+    private final Provider<RebootTile> mRebootTileProvider;
+    private final Provider<GamingModeTile> mGamingModeTileProvider;
+    private final Provider<DataSwitchTile> mDataSwitchTileProvider;
+    private final Provider<ScreenStabilizationTile> mScreenStabilizationTileProvider;
+    private final Provider<ScreenRecordTile> mScreeenRecordTileProvider;
+    private final Provider<WeatherTile> mWeatherTileProvider;
+    private final Provider<DcDimmingTile> mDcDimmingTileProvider;
 
     private QSTileHost mHost;
 
@@ -138,7 +153,23 @@ public class QSFactoryImpl implements QSFactory {
             Provider<UsbTetherTile> usbTetherTileProvider,
             Provider<VolumeTile> volumeTileProvider,
             Provider<VpnTile> vpnTileProvider,
-            Provider<AODTile> aodTileProvider) {
+            Provider<AODTile> aodTileProvider,
+            Provider<SmartPixelsTile> smartPixelsTileProvider,
+            Provider<ScreenshotTile> screenshotTileProvider,
+            Provider<CPUInfoTile> CPUInfoTileProvider,
+            Provider<HWKeysTile> HWKeysTileProvider,
+            Provider<DcDimmingTile> dcDimTileProvider,
+            Provider<CompassTile> compassTileProvider,
+            Provider<MusicTile> musicTileProvider,
+            Provider<SoundSearchTile> soundSearchTileProvider,
+            Provider<SoundTile> soundTileProvider,
+            Provider<RebootTile> rebootTileProvider,
+            Provider<GamingModeTile> gamingModeTileProvider,
+            Provider<DataSwitchTile> dataSwitchTileProvider,
+            Provider<FPSInfoTile> fpsInfoTileProvider,
+            Provider<ScreenStabilizationTile> screenStabilizationTileProvider,
+            Provider<ScreenRecordTile> screenRecordTileProvider,
+            Provider<WeatherTile> weatherTileProvider) {
         mWifiTileProvider = wifiTileProvider;
         mBluetoothTileProvider = bluetoothTileProvider;
         mCellularTileProvider = cellularTileProvider;
@@ -171,6 +202,22 @@ public class QSFactoryImpl implements QSFactory {
         mUsbTetherTileProvider = usbTetherTileProvider;
         mVolumeTileProvider = volumeTileProvider;
         mVpnTileProvider = vpnTileProvider;
+        mSmartPixelsTileProvider = smartPixelsTileProvider;
+        mScreenshotTileProvider = screenshotTileProvider;
+        mCPUInfoTileProvider = CPUInfoTileProvider;
+        mHWKeysTileProvider = HWKeysTileProvider;
+        mCompassTileProvider = compassTileProvider;
+        mMusicTileProvider = musicTileProvider;
+        mSoundSearchTileProvider = soundSearchTileProvider;
+        mSoundTileProvider = soundTileProvider;
+        mRebootTileProvider = rebootTileProvider;
+        mGamingModeTileProvider = gamingModeTileProvider;
+        mDataSwitchTileProvider = dataSwitchTileProvider;
+        mFPSInfoTileProvider = fpsInfoTileProvider;
+        mScreenStabilizationTileProvider = screenStabilizationTileProvider;
+        mScreeenRecordTileProvider = screenRecordTileProvider;
+        mWeatherTileProvider = weatherTileProvider;
+        mDcDimmingTileProvider = dcDimTileProvider;
     }
 
     public void setHost(QSTileHost host) {
@@ -251,6 +298,38 @@ public class QSFactoryImpl implements QSFactory {
                 return mVolumeTileProvider.get();
             case "vpn":
                 return mVpnTileProvider.get();
+            case "smartpixels":
+                return mSmartPixelsTileProvider.get();
+            case "screenshot":
+                return mScreenshotTileProvider.get();
+            case "cpuinfo":
+                return mCPUInfoTileProvider.get();
+            case "hw_keys":
+                return mHWKeysTileProvider.get();
+            case "compass":
+                return mCompassTileProvider.get();
+            case "music":
+                return mMusicTileProvider.get();
+            case "soundsearch":
+                return mSoundSearchTileProvider.get();
+            case "sound":
+                return mSoundTileProvider.get();
+            case "reboot":
+                return mRebootTileProvider.get();
+            case "gaming":
+                return mGamingModeTileProvider.get();
+            case "dataswitch":
+                return mDataSwitchTileProvider.get();
+            case "fpsinfo":
+                return mFPSInfoTileProvider.get();
+            case "screenstabilization":
+                return mScreenStabilizationTileProvider.get();
+            case "screenrecord":
+                return mScreeenRecordTileProvider.get();
+            case "weather":
+                return mWeatherTileProvider.get();
+            case "dc_dimming":
+                return mDcDimmingTileProvider.get();
         }
 
         // Intent tiles.
