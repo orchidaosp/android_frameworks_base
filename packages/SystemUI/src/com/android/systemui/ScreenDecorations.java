@@ -138,16 +138,6 @@ public class ScreenDecorations extends SystemUI implements Tunable,
     private boolean mIsReceivingNavBarColor = false;
     private boolean mInGesturalMode;
     private boolean mIsRoundedCornerMultipleRadius;
-    private boolean mCustomCutout;
-    private boolean mShowTopCutout;
-    private int mRoundedSize = -1;
-
-    private final SysuiStatusBarStateController mStatusBarStateController =
-            (SysuiStatusBarStateController) Dependency.get(StatusBarStateController.class);
-    private boolean mFullscreenMode;
-    private boolean mImmerseMode;
-    private int mImmerseModeSetting = 0;
-    private StatusBar mStatusBar;
 
     private CameraAvailabilityListener.CameraTransitionCallback mCameraTransitionCallback =
             new CameraAvailabilityListener.CameraTransitionCallback() {
@@ -699,8 +689,7 @@ public class ScreenDecorations extends SystemUI implements Tunable,
 
     private boolean hasRoundedCorners() {
         return mRoundedDefault > 0 || mRoundedDefaultBottom > 0 || mRoundedDefaultTop > 0
-                || mIsRoundedCornerMultipleRadius
-                || mRoundedSize > 0;
+                || mIsRoundedCornerMultipleRadius;
     }
 
     private boolean shouldDrawCutout() {
@@ -794,65 +783,25 @@ public class ScreenDecorations extends SystemUI implements Tunable,
 
     @Override
     public void onTuningChanged(String key, String newValue) {
-        switch (key) {
-            case SIZE:
-                mHandler.post(() -> {
-                    if (mCustomCutout) return;
-                    if (mOverlay == null) setupDecorations();
-                    int size = mRoundedDefault;
-                    int sizeTop = mRoundedDefaultTop;
-                    int sizeBottom = mRoundedDefaultBottom;
-
-                    if (newValue != null) {
-                        // Save user defined value
-                        mRoundedSize =
-                            TunerService.parseInteger(newValue, -1);
+        mHandler.post(() -> {
+            if (mOverlay == null) return;
+            if (SIZE.equals(key)) {
+                int size = mRoundedDefault;
+                int sizeTop = mRoundedDefaultTop;
+                int sizeBottom = mRoundedDefaultBottom;
+                if (newValue != null) {
+                    try {
+                        size = (int) (Integer.parseInt(newValue) * mDensity);
+                    } catch (Exception e) {
                     }
                 }
 
-                    // Calculate new size if user defined value available
-                    if (mRoundedSize >= 0) {
-                        size = (int) (mRoundedSize * mDensity);
-                    }
-
-                    if (size < 0) size = 0;
-
-                    if (sizeTop == 0 || size > 0) {
-                        sizeTop = size;
-                    }
-
-                    if (sizeBottom == 0 || size > 0) {
-                        sizeBottom = size;
-                    }
-
-                    updateWindowVisibilities();
-                    setSize(mOverlay.findViewById(R.id.left), sizeTop);
-                    setSize(mOverlay.findViewById(R.id.right), sizeTop);
-                    setSize(mBottomOverlay.findViewById(R.id.left), sizeBottom);
-                    setSize(mBottomOverlay.findViewById(R.id.right), sizeBottom);
-                });
-                break;
-            case CUTOUT:
-                mShowTopCutout =
-                        TunerService.parseIntegerSwitch(newValue, true);
-                mHandler.post(() -> {
-                    if (mCutoutTop == null) return;
-                    mCutoutTop.setShowCutout(mShowTopCutout && mImmerseModeSetting == 0);
-                });
-                break;
-            case DISPLAY_CUTOUT_MODE:
-                mImmerseModeSetting =
-                        TunerService.parseInteger(newValue, 0);
-                updateCutoutMode();
-                mHandler.post(() -> {
-                    if (mCutoutTop == null) return;
-                    mCutoutTop.setShowCutout(mShowTopCutout && mImmerseModeSetting == 0);
-                });
-                break;
-            default:
-                break;
-        }
-    }
+                if (sizeTop == 0) {
+                    sizeTop = size;
+                }
+                if (sizeBottom == 0) {
+                    sizeBottom = size;
+                }
 
                 setSize(mOverlay.findViewById(R.id.left), sizeTop);
                 setSize(mOverlay.findViewById(R.id.right), sizeTop);
